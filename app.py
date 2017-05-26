@@ -1,5 +1,4 @@
 from flask import Flask
-
 # Import the configuration data.
 from config import Configuration
 
