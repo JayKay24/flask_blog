@@ -14,7 +14,11 @@ def index():
     
 @entries.route('/tags/')
 def tag_index():
-    pass
+    """
+    Render all the tags in the database.
+    """
+    tags = Tag.query.order_by(Tag.name)
+    return object_list('entries/tag_index.html', tags)
 
 @entries.route('/tags/<slug>/')
 def tag_detail(slug):
