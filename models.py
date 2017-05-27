@@ -52,7 +52,7 @@ class Tag(db.Model):
     slug = db.Column(db.String(64), unique=True)
     
     def __init__(self, *args, **kwargs):
-        super(self, Tag).__init__(*args, **kwargs)
+        super(Tag, self).__init__(*args, **kwargs)
         self.slug = slugify(self.name)
         
     def __repr__(self):
