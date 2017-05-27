@@ -1,10 +1,23 @@
-from flask import Blueprint, render_template
+from flask import Blueprint, render_template, request
 
 from helpers import object_list
 from models import Entry, Tag
 
 entries = Blueprint('entries', __name__,
                     template_folder='templates')
+                    
+def entry_list(template, query, **context):
+    """
+    Filter and return results based on the search inquiry.
+    """
+    search = request.args.get('q')
+    # If 'q' is present, return only the entries that contain the
+    # search phrase in either the title or the body.
+    if search:
+        query = query.filter(
+            (Entry.title.contains(search))|
+            (Entry.body.contains(search)))
+    return object_list(template, query, **context)
                     
 @entries.route('/')
 def index():
