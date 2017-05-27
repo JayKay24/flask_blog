@@ -13,8 +13,8 @@ class Entry(db.Model):
     title = db.Column(db.String(100))
     slug = db.Column(db.String(100), unique=True)
     body = db.Column(db.Text)
-    created_timestamp = db.Column(db.Datetime, default=datetime.datetime.now)
-    modified_timestamp = db.Column(db.Datetime, default=datetime.datetime.now,
+    created_timestamp = db.Column(db.DateTime, default=datetime.datetime.now)
+    modified_timestamp = db.Column(db.DateTime, default=datetime.datetime.now,
                                    onupdate=datetime.datetime.now)
                                    
     def __init__(self, *args, **kwargs):
