@@ -23,7 +23,7 @@ def entry_list(template, query, **context):
 def index():
     entries = Entry.query.order_by(Entry.created_timestamp.desc())
     # Return a paginated list of entries.
-    return object_list('entries/index.html', entries)
+    return entry_list('entries/index.html', entries)
     
 @entries.route('/tags/')
 def tag_index():
