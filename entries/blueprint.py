@@ -1,5 +1,6 @@
 from flask import Blueprint
 
+from helpers import object_list
 from models import Entry, Tag
 
 entries = Blueprint('entries', __name__,
@@ -7,7 +8,9 @@ entries = Blueprint('entries', __name__,
                     
 @entries.route('/')
 def index():
-    return 'Entries index'
+    entries = Entry.query.order_by(Entry.created_timestamp.desc())
+    # Return a paginated list of entries.
+    return object_list('entries/index.html', entries)
     
 @entries.route('/tags/')
 def tag_index():
