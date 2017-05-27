@@ -31,3 +31,15 @@ class Entry(db.Model):
     # Generate a helpful representation of instances of this Entry class.
     def __repr__(self):
         return '<Entry: {}>'.format(self.title)
+        
+class Tag(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(64))
+    slug = db.Column(db.String(64), unique=True)
+    
+    def __init__(self, *args, **kwargs):
+        super(self, Tag).__init__(*args, **kwargs)
+        self.slug = slugify(self.name)
+        
+    def __repr__(self):
+        return '<Tag: {}>'.format(self.name)
