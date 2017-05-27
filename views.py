@@ -5,7 +5,6 @@ from app import app
 @app.route('/')
 def homepage():
     name = request.args.get('name')
-    if not name:
-        name = '<unknown>'
+    number = request.args.get('number')
     # Pass name into the template context
-    return render_template('homepage.html', name=name)
+    return render_template('homepage.html', name=name, number=number)
