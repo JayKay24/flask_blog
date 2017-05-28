@@ -5,4 +5,5 @@ class Configuration:
     DEBUG=True
     SECRET_KEY = 'savitar&zoom'
     SQLALCHEMY_DATABASE_URI = 'sqlite:///{}/blog.db'.format(APPLICATION_DIR)
-    
+    STATIC_DIR = os.path.join(APPLICATION_DIR, 'static')
+    IMAGES_DIR = os.path.join(STATIC_DIR, 'images')
