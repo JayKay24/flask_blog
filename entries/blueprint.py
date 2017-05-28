@@ -83,12 +83,12 @@ def detail(slug):
     Render the contents of a single blog entry.
     """
     # Return a 404 if none matches.
-    entry = Entry.query.filter(Entry.slug == slug).first_or_404()
+    entry = get_entry_or_404(slug)
     return render_template('entries/detail.html', entry=entry)
     
 @entries.route('/<slug>/edit/', methods=['GET', 'POST'])
 def edit(slug):
-    entry = Entry.query.filter(Entry.slug == slug).first_or_404()
+    entry = get_entry_or_404(slug)
     # Check the request method used.
     if request.method == 'POST':
         # When WTForms receives an obj parameter, it will attempt to 
@@ -107,7 +107,7 @@ def edit(slug):
     
 @entries.route('/<slug>/delete/', methods=['GET', 'POST'])
 def delete(slug):
-    entry = Entry.query.filter(Entry.slug == slug).first_or_404()
+    entry = get_entry_or_404(slug)
     if request.method == 'POST':
         # Change the entry status to STATUS_DELETED.
         entry.status = Entry.STATUS_DELETED
