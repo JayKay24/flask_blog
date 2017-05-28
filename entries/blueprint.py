@@ -70,7 +70,7 @@ def create():
             entry = form.save_entry(Entry())
             db.session.add(entry)
             db.session.commit()
-            flash('Entry {} created successfully.'.format(entry.title), 
+            flash('Entry "{}" created successfully.'.format(entry.title), 
                   'success')
             # Redirect to the detail page of the newly-created blog post.
             return redirect(url_for('entries.detail', slug=entry.slug))
@@ -100,7 +100,7 @@ def edit(slug):
             entry = form.save_entry(entry)
             db.session.add(entry)
             db.session.commit()
-            flash('Entry {} has been saved.'.format(entry.title), 
+            flash('Entry "{}" has been saved.'.format(entry.title), 
                   'success')
             return redirect(url_for('entries.detail', slug=entry.slug))
     else:
@@ -117,7 +117,7 @@ def delete(slug):
         entry.status = Entry.STATUS_DELETED
         db.session.add(entry)
         db.session.commit()
-        flash('Entry {} has been deleted.'.format(entry.title), 
+        flash('Entry "{}" has been deleted.'.format(entry.title), 
               'success')
         return redirect(url_for('entries.index'))
     return render_template('entries/delete.html', entry=entry)
