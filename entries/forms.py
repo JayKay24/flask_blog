@@ -15,3 +15,12 @@ class EntryForm(wtforms.Form):
             (Entry.STATUS_DRAFT, 'Draft')),
         # Force the value into an integer.
         coerce=int)
+    
+    def save_entry(self, entry):
+        """
+        Populate the entry passed in with the form data, regenerate
+        the entry's slug based on the title.
+        """
+        self.populate_obj(entry)
+        entry.generate_slug()
+        return entry
