@@ -9,9 +9,9 @@
 	{% for page in object_list.iter_pages() %}
 		<li>
 			{% if page %}
-				<a {% if page == object_list.page %} class="active"{% endif %} href="./?page={{ page }}"></a>
+				<a {% if page == object_list.page %} class="active" {% endif %} href="./?page={{ page }}">{{ page }}</a>
 			{% else %}
-				<a class="disabled"></a>
+				<a class="disabled">...</a>
 			{% endif %}
 		</li>
 	{% endfor %}
