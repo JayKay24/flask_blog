@@ -22,7 +22,15 @@ def entry_list(template, query, **context):
             (Entry.title.contains(search))|
             (Entry.body.contains(search)))
     return object_list(template, query, **context)
-                    
+  
+def get_entry_or_404(slug):
+    valid_statuses = (Entry.STATUS_PUBLIC, Entry.STATUS_DRAFT)
+    query = Entry.query.filter(
+        (Entry.slug == slug) &
+        (Entry.status.in_(valid_statuses))
+    )
+    return query.first_or_404()
+                  
 @entries.route('/')
 def index():
     entries = Entry.query.order_by(Entry.created_timestamp.desc())
