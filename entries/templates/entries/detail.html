@@ -12,7 +12,7 @@
 		{% endfor %}
 		<li><h4>Actions</h4></li>
 		<li><a href="{{ url_for('entries.edit', slug=entry.slug) }}">Edit</a></li>
-		<li><a href="{{ url_for('entries.delete', slug=entry.slug) }}"></a></li>
+		<li><a href="{{ url_for('entries.delete', slug=entry.slug) }}">Delete</a></li>
 	</ul>
 
 	<p>Published {{ entry.created_timestamp.strftime('%m/%d/%Y') }}</p>
