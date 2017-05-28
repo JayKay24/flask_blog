@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, request, redirect, url_for
+from flask import Blueprint, flash, render_template, request, redirect, url_for
 
 from helpers import object_list
 from models import Entry, Tag
@@ -70,6 +70,8 @@ def create():
             entry = form.save_entry(Entry())
             db.session.add(entry)
             db.session.commit()
+            flash('Entry {} created successfully.'.format(entry.title), 
+                  'success')
             # Redirect to the detail page of the newly-created blog post.
             return redirect(url_for('entries.detail', slug=entry.slug))
     else:
@@ -98,6 +100,8 @@ def edit(slug):
             entry = form.save_entry(entry)
             db.session.add(entry)
             db.session.commit()
+            flash('Entry {} has been saved.'.format(entry.title), 
+                  'success')
             return redirect(url_for('entries.detail', slug=entry.slug))
     else:
         form = EntryForm(obj=entry)
@@ -113,5 +117,7 @@ def delete(slug):
         entry.status = Entry.STATUS_DELETED
         db.session.add(entry)
         db.session.commit()
+        flash('Entry {} has been deleted.'.format(entry.title), 
+              'success')
         return redirect(url_for('entries.index'))
     return render_template('entries/delete.html', entry=entry)
