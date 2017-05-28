@@ -94,3 +94,14 @@ def edit(slug):
     # Pass the entry under editing to the template context to display
     # the entry title to the user.
     return render_template('entries/edit.html', entry=entry, form=form)
+    
+@entries.route('/<slug>/delete/', methods=['GET', 'POST'])
+def delete(slug):
+    entry = Entry.query.filter(Entry.slug == slug).first_or_404()
+    if request.method == 'POST':
+        # Change the entry status to STATUS_DELETED.
+        entry.status = Entry.STATUS_DELETED
+        db.session.add(entry)
+        db.session.commit()
+        return redirect(url_for('entries.index'))
+    return render_template('entries/delete.html', entry=entry)
