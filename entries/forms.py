@@ -1,4 +1,5 @@
 import wtforms
+from wtforms.validators import DataRequired
 
 from models import Entry
 
@@ -6,8 +7,12 @@ class EntryForm(wtforms.Form):
     """
     Form to enter blog entries.
     """
-    title = wtforms.StringField('Title')
-    body = wtforms.TextAreaField('Body')
+    title = wtforms.StringField(
+        'Title', validators=[DataRequired()])
+        
+    body = wtforms.TextAreaField(
+    'Body', validators=[DataRequired()])
+    
     status = wtforms.SelectField(
         'Entry Status',
         choices=(
