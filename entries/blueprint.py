@@ -75,3 +75,22 @@ def detail(slug):
     # Return a 404 if none matches.
     entry = Entry.query.filter(Entry.slug == slug).first_or_404()
     return render_template('entries/detail.html', entry=entry)
+    
+@entries.route('/<slug>/edit/', methods=['GET', 'POST'])
+def edit(slug):
+    entry = Entry.query.filter(Entry.slug == slug).first_or_404()
+    # Check the request method used.
+    if request.method == 'POST':
+        # When WTForms receives an obj parameter, it will attempt to 
+        # pre-populate the form fields with values taken from obj.
+        form = EntryForm(request.form, obj=entry)
+        if form.validate():
+            entry = form.save_entry(entry)
+            db.session.add(entry)
+            db.session.commit()
+            return redirect(url_for('entries.detail', slug=entry.slug))
+    else:
+        form = EntryForm(obj=entry)
+    # Pass the entry under editing to the template context to display
+    # the entry title to the user.
+    return render_template('entries/edit.html', entry=entry, form=form)
