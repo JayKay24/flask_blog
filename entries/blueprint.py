@@ -1,8 +1,9 @@
-from flask import Blueprint, render_template, request
+from flask import Blueprint, render_template, request, redirect, url_for
 
 from helpers import object_list
 from models import Entry, Tag
 from entries.forms import EntryForm
+from app import db
 
 entries = Blueprint('entries', __name__,
                     template_folder='templates')
@@ -43,12 +44,27 @@ def tag_detail(slug):
     entries = tag.entries.order_by(Entry.created_timestamp.desc())
     return entry_list('entries/tag_detail.html', entries, tag=tag)
 
-@entries.route('/create/')
+# This view accepts both GET and POST requests.
+# Will get rid of the Method Not Allowed error when form is submitted.
+@entries.route('/create/', methods=['GET', 'POST'])
 def create():
     """
     Render the form used to create blog entries.
     """
-    form = EntryForm()
+    # Check the request method used.
+    if request.method == 'POST':
+        # Instanstiate the form and pass in the raw form data.
+        form = EntryForm(request.form)
+        # Check if the form is valid.
+        if form.validate():
+            entry = form.save_entry(Entry())
+            db.session.add(entry)
+            db.session.commit()
+            # Redirect to the detail page of the newly-created blog post.
+            return redirect(url_for('entries.detail', slug=entry.slug))
+    else:
+        # Simply display an HTML page containing the form.
+        form = EntryForm()
     return render_template('entries/create.html', form=form)
 
 @entries.route('/<slug>/')
