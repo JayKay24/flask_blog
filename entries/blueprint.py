@@ -12,10 +12,12 @@ def entry_list(template, query, **context):
     """
     Filter and return results based on the search inquiry.
     """
-    search = request.args.get('q')
-    # If 'q' is present, return only the entries that contain the
-    # search phrase in either the title or the body.
-    if search:
+    valid_statuses = (Entry.STATUS_PUBLIC, Entry.STATUS_DRAFT)
+    query = query.filter(Entry.status.in_(valid_statuses))
+    if request.args.get('q'):
+        search = request.args.get('q')
+        # If 'q' is present, return only the entries that contain the
+        # search phrase in either the title or the body.
         query = query.filter(
             (Entry.title.contains(search))|
             (Entry.body.contains(search)))
