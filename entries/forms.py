@@ -59,6 +59,11 @@ class EntryForm(wtforms.Form):
             (Entry.STATUS_DRAFT, 'Draft')),
         # Force the value into an integer.
         coerce=int)
+        
+    tags = TagField(
+        'Tags',
+        description='Separate multiple tags with commas.'
+    )
     
     def save_entry(self, entry):
         """
