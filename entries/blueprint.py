@@ -17,6 +17,7 @@ def entry_list(template, query, **context):
     """
     Filter and return results based on the search inquiry.
     """
+    query = filter_status_by_user(query)
     valid_statuses = (Entry.STATUS_PUBLIC, Entry.STATUS_DRAFT)
     query = query.filter(Entry.status.in_(valid_statuses))
     if request.args.get('q'):
@@ -42,12 +43,18 @@ def filter_status_by_user(query):
     """
     # The user is anonymous.
     if not g.user.is_authenticated:
-        return query.filter(Entry.status == Entry.STATUS_PUBLIC)
+        query = query.filter(Entry.status == Entry.STATUS_PUBLIC)
     else:
-        # The user is authenticated.
-        return query.filter(
-            Entry.status.in_((Entry.STATUS_PUBLIC, Entry.STATUS_DRAFT))        
+        # Allow user to view their own drafts.
+        query = query.filter(
+            (Entry.status == Entry.STATUS_PUBLIC)|
+            # Only logged in user can view their own draft.
+            ((Entry.author == g.user) &
+             (Entry.status != Entry.STATUS_DELETED))
         )
+    # Query = 'Give me all the public entries, or the undeleted entries for'
+    #         'which I am the author.'
+    return query
          
 @entries.route('/image-upload/', methods=['GET', 'POST'])
 @login_required
