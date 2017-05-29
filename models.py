@@ -1,14 +1,6 @@
 import datetime, re
 
-from app import db, login_manager
-
-@login_manager.user_loader
-def _user_loader(user_id):
-    """
-    Accept the id stored in the session and return a User
-    object from the database.
-    """
-    return User.query.get(int(user_id))
+from app import db, login_manager, bcrypt
 
 # Helper function to generate nice-looking URLs.
 def slugify(s):
@@ -87,3 +79,64 @@ class User(db.Model):
     def generate_slug(self):
         if self.name:
             self.slug = slugify(self.name)
+            
+    # Flask-login interface.
+    def get_id(self):
+        """
+        Instruct Flask-login how to determine the id of a user, which
+        will then be stored in the session.
+        """
+        return str(self.id)
+        
+    def is_authenticated(self):
+        return True
+        
+    def is_active(self):
+        return self.active
+        
+    def is_anonymous(self):
+        return False
+        
+    @staticmethod
+    def make_password(plaintext):
+        """
+        Accept a plaintext password and return the hashed version.
+        """
+        return bcrypt.generate_password_hash(plaintext)
+        
+    def check_password(self, raw_password):
+        """
+        Accept a plaintext password and determine whether it matches
+        the hashed version stored in the database.
+        """
+        return bcrypt.check_password_hash(self.password_hash, raw_password)
+        
+    @classmethod
+    def create(cls, email, password, **kwargs):
+        """
+        Create a new user and automatically hash the password
+        before saving.
+        """
+        return User(
+            email=email,
+            password_hash=User.make_password(password),
+            **kwargs)
+    
+    @staticmethod
+    def authenticate(email, password):
+        """
+        Retrieve a user given a username and password.
+        """
+        user = User.query.filter(User.email == email).first()
+        if user and user.check_password(password):
+            return user
+        return False
+            
+# Tell Flask-login how to determine which user is logged in.
+@login_manager.user_loader
+def _user_loader(user_id):
+    """
+    Accept the id stored in the session and return a User
+    object from the database.
+    """
+    return User.query.get(int(user_id))

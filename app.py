@@ -1,4 +1,5 @@
 from flask import Flask, g
+from flask.ext.bcrypt import Bcrypt
 from flask.ext.login import LoginManager, current_user
 from flask.ext.migrate import Migrate, MigrateCommand
 from flask.ext.script import Manager
@@ -14,6 +15,9 @@ app.config.from_object(Configuration)
 
 # Create an object to manage the database connections.
 db = SQLAlchemy(app)
+
+# Register bcrypt with app.
+bcrypt = Bcrypt(app)
 migrate = Migrate(app, db)
 
 manager = Manager(app)
@@ -26,4 +30,9 @@ login_manager.login_view = "login"
 # Signal handler loads the current user.
 @app.before_request
 def before_request():
+    """
+    Retrieve the currently logged-in user and store it in a
+    special object g.
+    """
+    # g object can be used to store arbitrary values-per-request.
     g.user = current_user
