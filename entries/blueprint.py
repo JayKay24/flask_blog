@@ -1,7 +1,8 @@
 import os
 
 from flask.ext.login import login_required
-from flask import Blueprint, flash, render_template, request, redirect, url_for
+from flask import (Blueprint, flash, render_template, request, redirect, 
+                   url_for, g)
 from werkzeug import secure_filename
 
 from helpers import object_list
@@ -27,13 +28,26 @@ def entry_list(template, query, **context):
             (Entry.body.contains(search)))
     return object_list(template, query, **context)
   
-def get_entry_or_404(slug):
-    valid_statuses = (Entry.STATUS_PUBLIC, Entry.STATUS_DRAFT)
-    query = Entry.query.filter(
-        (Entry.slug == slug) &
-        (Entry.status.in_(valid_statuses))
-    )
+def get_entry_or_404(slug, author=None):
+    query = Entry.query.filter(Entry.slug == slug)
+    if author:
+        query = query.filter(Entry.author == author)
+    else:
+        query = filter_status_by_user(query)
     return query.first_or_404()
+    
+def filter_status_by_user(query):
+    """
+    Ensure that anonymous users cannot see draft entries.
+    """
+    # The user is anonymous.
+    if not g.user.is_authenticated:
+        return query.filter(Entry.status == Entry.STATUS_PUBLIC)
+    else:
+        # The user is authenticated.
+        return query.filter(
+            Entry.status.in_((Entry.STATUS_PUBLIC, Entry.STATUS_DRAFT))        
+        )
          
 @entries.route('/image-upload/', methods=['GET', 'POST'])
 @login_required
@@ -93,7 +107,9 @@ def create():
         form = EntryForm(request.form)
         # Check if the form is valid.
         if form.validate():
-            entry = form.save_entry(Entry())
+            # Manually set the author attribute during instatiation
+            # of entry object.
+            entry = form.save_entry(Entry(author=g.user))
             db.session.add(entry)
             db.session.commit()
             flash('Entry "{}" created successfully.'.format(entry.title), 
@@ -117,7 +133,9 @@ def detail(slug):
 @entries.route('/<slug>/edit/', methods=['GET', 'POST'])
 @login_required
 def edit(slug):
-    entry = get_entry_or_404(slug)
+    # Pass in the current user as the author parameter to restrict access to
+    # this view.
+    entry = get_entry_or_404(slug, author=None)
     # Check the request method used.
     if request.method == 'POST':
         # When WTForms receives an obj parameter, it will attempt to 
@@ -139,7 +157,9 @@ def edit(slug):
 @entries.route('/<slug>/delete/', methods=['GET', 'POST'])
 @login_required
 def delete(slug):
-    entry = get_entry_or_404(slug)
+    # Pass in the current user as the author parameter to restrict access to
+    # this view.
+    entry = get_entry_or_404(slug, author=None)
     if request.method == 'POST':
         # Change the entry status to STATUS_DELETED.
         entry.status = Entry.STATUS_DELETED
