@@ -1,6 +1,14 @@
 import datetime, re
 
-from app import db
+from app import db, login_manager
+
+@login_manager.user_loader
+def _user_loader(user_id):
+    """
+    Accept the id stored in the session and return a User
+    object from the database.
+    """
+    return User.query.get(int(user_id))
 
 # Helper function to generate nice-looking URLs.
 def slugify(s):
