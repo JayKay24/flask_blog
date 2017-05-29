@@ -6,10 +6,7 @@ from forms import LoginForm
 
 @app.route('/')
 def homepage():
-    name = request.args.get('name')
-    number = request.args.get('number')
-    # Pass name into the template context
-    return render_template('homepage.html', name=name, number=number)
+    return render_template('homepage.html')
     
 @app.route('/login/', methods=['GET', 'POST'])
 def login():

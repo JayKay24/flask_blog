@@ -1,5 +1,6 @@
 import os
 
+from flask.ext.login import login_required
 from flask import Blueprint, flash, render_template, request, redirect, url_for
 from werkzeug import secure_filename
 
@@ -35,6 +36,7 @@ def get_entry_or_404(slug):
     return query.first_or_404()
          
 @entries.route('/image-upload/', methods=['GET', 'POST'])
+@login_required
 def image_upload():
     if request.method == 'POST':
         form = ImageForm(request.form)
@@ -80,6 +82,7 @@ def tag_detail(slug):
 # This view accepts both GET and POST requests.
 # Will get rid of the Method Not Allowed error when form is submitted.
 @entries.route('/create/', methods=['GET', 'POST'])
+@login_required
 def create():
     """
     Render the form used to create blog entries.
@@ -112,6 +115,7 @@ def detail(slug):
     return render_template('entries/detail.html', entry=entry)
     
 @entries.route('/<slug>/edit/', methods=['GET', 'POST'])
+@login_required
 def edit(slug):
     entry = get_entry_or_404(slug)
     # Check the request method used.
@@ -133,6 +137,7 @@ def edit(slug):
     return render_template('entries/edit.html', entry=entry, form=form)
     
 @entries.route('/<slug>/delete/', methods=['GET', 'POST'])
+@login_required
 def delete(slug):
     entry = get_entry_or_404(slug)
     if request.method == 'POST':
