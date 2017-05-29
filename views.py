@@ -15,6 +15,7 @@ def homepage():
 def login():
     if request.method == 'POST':
         form = LoginForm(request.form)
+        # The user is validated and authenticated.
         if form.validate():
             # login_user handles setting the correct session values.
             login_user(form.user, remember=form.remember_me.data)
