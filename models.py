@@ -28,6 +28,7 @@ class Entry(db.Model):
     created_timestamp = db.Column(db.DateTime, default=datetime.datetime.now)
     modified_timestamp = db.Column(db.DateTime, default=datetime.datetime.now,
                                    onupdate=datetime.datetime.now)
+    author_id = db.Column(db.Integer, db.ForeignKey('user.id'))
                      
     # Query the Tag model via the entry_tags table.
     # Create a back reference that allows to go from the Tag model back to
