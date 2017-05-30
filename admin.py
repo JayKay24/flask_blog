@@ -1,3 +1,4 @@
+from wtforms.fields import SelectField
 from flask.ext.admin import Admin
 # Flask-Admin contrib package provides out-of-the-box create,
 # read, update and delete functionalities in special views designed
@@ -32,6 +33,18 @@ class EntryModelView(ModelView):
     column_searchable_list = ['title', 'body']
     
     column_select_related_list = ['author'] # Efficiently SELECT the author.
+
+    form_args = {
+        'status': {'choices': _status_choices, 'coerce': int},    
+    }
+    form_columns = ['title', 'body', 'status', 'author', 'tags']
+    form_overrides = {'status': SelectField}
+    # When we are looking up the author, search on the author's name or email.    
+    form_ajax_refs = {
+        'authors': {
+            'fields': (User.name, User.email)        
+        }    
+    }
 
 class UserModelView(ModelView):
     column_list = ['email', 'name', 'active', 'created_timestamp']
