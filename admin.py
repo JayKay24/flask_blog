@@ -8,6 +8,18 @@ from app import app, db
 from models import Entry, Tag, User
 
 class EntryModelView(ModelView):
+    # Display a human-readable value to the status column.
+    # Provide a mapping of the status vaue to display the value.
+    _status_choices = [(choice, label) for choice, label in [
+        (Entry.STATUS_PUBLIC, 'Public'),
+        (Entry.STATUS_DRAFT, 'Draft'),
+        (Entry.STATUS_DELETED, 'Deleted')    
+    ]]
+
+    column_choices = {
+        'status': _status_choices,    
+    }    
+    
     column_list = [
         'title', 'status', 'author', 'tease', 'tag_list',
         'created_timestamp'
