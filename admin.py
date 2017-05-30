@@ -26,10 +26,13 @@ class EntryModelView(ModelView):
     ]
     column_select_related_list = ['author'] # Efficiently SELECT the author.
 
+class UserModelView(ModelView):
+    column_list = ['email', 'name', 'active', 'created_timestamp']
+
 # To avoid a circular import, admin is loaded after app.
 admin = Admin(app, 'Blog Admin')
 # Call admin.admin_view and pass instances of the ModelView class
 # as well as the db session, for it to access the database with.
 admin.add_view(EntryModelView(Entry, db.session))
 admin.add_view(ModelView(Tag, db.session))
-admin.add_view(ModelView(User, db.session))
+admin.add_view(UserModelView(User, db.session))
