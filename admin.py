@@ -36,6 +36,9 @@ class EntryModelView(ModelView):
 class UserModelView(ModelView):
     column_list = ['email', 'name', 'active', 'created_timestamp']
 
+    column_filters = [User.active, 'created_timestamp']
+    
+    column_searchable_list = ['email', 'name']
 # To avoid a circular import, admin is loaded after app.
 admin = Admin(app, 'Blog Admin')
 # Call admin.admin_view and pass instances of the ModelView class
