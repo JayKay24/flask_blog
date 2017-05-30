@@ -1,5 +1,10 @@
+from flask import request, session
+
 # Import the flask application instance from app.py
 from app import app, db
+
+# Import admin after app.
+import admin
 import models
 import views
 
