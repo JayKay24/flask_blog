@@ -1,4 +1,5 @@
 from wtforms.fields import SelectField
+from wtforms.fields import PasswordField
 from flask.ext.admin import Admin
 # Flask-Admin contrib package provides out-of-the-box create,
 # read, update and delete functionalities in special views designed
@@ -41,7 +42,7 @@ class EntryModelView(ModelView):
     form_overrides = {'status': SelectField}
     # When we are looking up the author, search on the author's name or email.    
     form_ajax_refs = {
-        'authors': {
+        'author': {
             'fields': (User.name, User.email)        
         }    
     }
@@ -52,6 +53,18 @@ class UserModelView(ModelView):
     column_filters = [User.active, 'created_timestamp']
     
     column_searchable_list = ['email', 'name']
+    form_columns = ['email', 'password', 'name', 'active']
+    form_extra_fields = {
+        'password': PasswordField('New Password'),    
+    }
+    
+    def on_model_change(self, form, model, is_created):
+        """
+        Enter a new password, replacing the old one.
+        """
+        if form.password.data:
+            model.password_hash = User.make_password(form.password.data)
+        return super().on_model_change(form, model, is_created)
 # To avoid a circular import, admin is loaded after app.
 admin = Admin(app, 'Blog Admin')
 # Call admin.admin_view and pass instances of the ModelView class
