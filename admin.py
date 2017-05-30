@@ -24,6 +24,9 @@ class EntryModelView(ModelView):
         'title', 'status', 'author', 'tease', 'tag_list',
         'created_timestamp'
     ]
+    
+    column_searchable_list = ['title', 'body']
+    
     column_select_related_list = ['author'] # Efficiently SELECT the author.
 
 class UserModelView(ModelView):
