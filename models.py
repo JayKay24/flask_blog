@@ -48,6 +48,20 @@ class Entry(db.Model):
         if self.title:
             self.slug = slugify(self.title)
             
+    @property
+    def tag_list(self):
+        """
+        Return a string of tags joined by a comma.
+        """
+        return ', '.join(tag.name for tag in self.tags)
+        
+    @property
+    def tease(self):
+        """
+        Return the first 100 characters in the body's text.
+        """
+        return self.body[:100]
+            
     # Generate a helpful representation of instances of this Entry class.
     def __repr__(self):
         return '<Entry: {}>'.format(self.title)
