@@ -20,11 +20,15 @@ class EntryModelView(ModelView):
         'status': _status_choices,    
     }    
     
+    column_filters = [
+        'status', User.name, User.email, 'created_timestamp'    
+    ]    
+    
     column_list = [
         'title', 'status', 'author', 'tease', 'tag_list',
         'created_timestamp'
     ]
-    
+    # Textbox to search title and body fields.
     column_searchable_list = ['title', 'body']
     
     column_select_related_list = ['author'] # Efficiently SELECT the author.
