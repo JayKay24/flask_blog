@@ -80,7 +80,7 @@ class ImageForm(wtforms.Form):
     """
     file = wtforms.FileField('Image file')
     
-class CommentForm(wtforms.form):
+class CommentForm(wtforms.Form):
     name = wtforms.StringField('Name', validators=[DataRequired()])
     email = wtforms.StringField('Email', validators=[DataRequired(),
                                                      Email()])
