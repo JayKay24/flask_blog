@@ -89,6 +89,8 @@ class CommentForm(wtforms.form):
                                                     Length(min=10, max=3000)])
     entry_id = wtforms.HiddenField(validators=[DataRequired()])
     
+    # Flask-Restless does not provide validation.
+    # Leverage wtforms validation inside my REST API.
     def validate(self):
         if not super().validate():
             return False

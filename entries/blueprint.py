@@ -7,7 +7,7 @@ from werkzeug import secure_filename
 
 from helpers import object_list
 from models import Entry, Tag
-from entries.forms import EntryForm, ImageForm
+from entries.forms import EntryForm, ImageForm, CommentForm
 from app import db, app
 
 entries = Blueprint('entries', __name__,
@@ -135,7 +135,10 @@ def detail(slug):
     """
     # Return a 404 if none matches.
     entry = get_entry_or_404(slug)
-    return render_template('entries/detail.html', entry=entry)
+    # Pre-populate the entry_id hidden field with the value of the
+    # requested entry.
+    form = CommentForm(data={'entry_id': entry.id})
+    return render_template('entries/detail.html', entry=entry, form=form)
     
 @entries.route('/<slug>/edit/', methods=['GET', 'POST'])
 @login_required
