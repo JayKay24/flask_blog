@@ -1,3 +1,4 @@
+from flask.ext.admin.contrib.fileadmin import FileAdmin
 from wtforms.fields import SelectField
 from wtforms.fields import PasswordField
 from flask.ext.admin import Admin
@@ -76,6 +77,10 @@ class UserModelView(SlugModelView):
         if form.password.data:
             model.password_hash = User.make_password(form.password.data)
         return super().on_model_change(form, model, is_created)
+
+class BlogFileAdmin(FileAdmin):
+    pass
+
 # To avoid a circular import, admin is loaded after app.
 admin = Admin(app, 'Blog Admin')
 # Call admin.admin_view and pass instances of the ModelView class
@@ -83,3 +88,6 @@ admin = Admin(app, 'Blog Admin')
 admin.add_view(EntryModelView(Entry, db.session))
 admin.add_view(SlugModelView(Tag, db.session))
 admin.add_view(UserModelView(User, db.session))
+admin.add_view(
+    BlogFileAdmin(app.config['STATIC_DIR'], '/static/', name='Static Files')
+)
