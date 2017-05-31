@@ -5,6 +5,7 @@ from app import app, db
 
 # Import admin after app.
 import admin
+import api
 import models
 import views
 
