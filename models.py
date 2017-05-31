@@ -36,7 +36,9 @@ class Entry(db.Model):
     # Use lazy='dynamic' to get a Query object.
     tags = db.relationship('Tag', secondary=entry_tags,
                            backref=db.backref('entries', lazy='dynamic'))
-                                   
+    # The comments attribute on any given entry will be a filterable query.
+    comments = db.relationship('Comment', db.backref='entry', lazy='dynamic')
+                              
     def __init__(self, *args, **kwargs):
         # Call parent constructor.
         super(Entry, self).__init__(*args, **kwargs)
