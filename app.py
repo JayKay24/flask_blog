@@ -1,4 +1,5 @@
 from flask import Flask, g
+from flask.ext.restless import APIManager
 from flask.ext.bcrypt import Bcrypt
 from flask.ext.login import LoginManager, current_user
 from flask.ext.migrate import Migrate, MigrateCommand
@@ -15,6 +16,8 @@ app.config.from_object(Configuration)
 
 # Create an object to manage the database connections.
 db = SQLAlchemy(app)
+
+api = APIManager(app, flask_sqlalchemy_db=db)
 
 # Register bcrypt with app.
 bcrypt = Bcrypt(app)
