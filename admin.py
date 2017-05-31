@@ -9,7 +9,18 @@ from flask.ext.admin.contrib.sqla import ModelView
 from app import app, db
 from models import Entry, Tag, User
 
-class EntryModelView(ModelView):
+class BaseModelView(ModelView):
+    pass
+
+# Whenever a model is changed, a slug should be generated.
+class SlugModelView(BaseModelView):
+    def on_model_change(self, form, model, is_created):
+        model.generate_slug()
+        return super().on_model_change(
+            form, model, is_created        
+        )
+
+class EntryModelView(SlugModelView):
     # Display a human-readable value to the status column.
     # Provide a mapping of the status vaue to display the value.
     _status_choices = [(choice, label) for choice, label in [
@@ -47,7 +58,7 @@ class EntryModelView(ModelView):
         }    
     }
 
-class UserModelView(ModelView):
+class UserModelView(SlugModelView):
     column_list = ['email', 'name', 'active', 'created_timestamp']
 
     column_filters = [User.active, 'created_timestamp']
@@ -70,5 +81,5 @@ admin = Admin(app, 'Blog Admin')
 # Call admin.admin_view and pass instances of the ModelView class
 # as well as the db session, for it to access the database with.
 admin.add_view(EntryModelView(Entry, db.session))
-admin.add_view(ModelView(Tag, db.session))
+admin.add_view(SlugModelView(Tag, db.session))
 admin.add_view(UserModelView(User, db.session))
