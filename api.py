@@ -23,7 +23,9 @@ def post_preprocessor(data, **kwargs):
 # Populate my app with additional URL routes and view code
 # that together, consitutes a RESTFUL API.
 api.create_api(
-    Comment, 
+    Comment,
+    # Restrict the Comment fields returned by the api.
+    include_columns=['id', 'name', 'url', 'body', 'created_timestamp'],
     methods=['GET', 'POST'],
     preprocessors={
         'POST': [post_preprocessor],    
