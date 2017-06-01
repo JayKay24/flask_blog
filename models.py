@@ -1,4 +1,4 @@
-import datetime, re
+import datetime, re, urllib, hashlib
 
 from app import db, login_manager, bcrypt
 
@@ -172,6 +172,13 @@ class Comment(db.Model):
     status = db.Column(db.SmallInteger, default=STATUS_PUBLIC)
     created_timestamp = db.Column(db.DateTime, default=datetime.datetime.now)
     entry_id = db.Column(db.Integer, db.ForeignKey('entry.id'))
+    
+    # Display an avatar next to a user's comment.
+    def gravatar(self, size=75):
+        return 'http://www.gravatar.com/avatar.php?{}'.format(
+            urllib.urlencode({
+                'gravatar_id': hashlib.md5(self.email).hexdigest(),
+                'size': str(size)}))
     
     def __repr__(self):
         return '<Comment from {}>'.format(self.name)
