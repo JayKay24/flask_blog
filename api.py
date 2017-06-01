@@ -26,6 +26,7 @@ api.create_api(
     Comment,
     # Restrict the Comment fields returned by the api.
     include_columns=['id', 'name', 'url', 'body', 'created_timestamp'],
+    include_methods=['gravatar'],
     methods=['GET', 'POST'],
     preprocessors={
         'POST': [post_preprocessor],    
