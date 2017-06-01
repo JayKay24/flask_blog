@@ -176,8 +176,8 @@ class Comment(db.Model):
     # Display an avatar next to a user's comment.
     def gravatar(self, size=75):
         return 'http://www.gravatar.com/avatar.php?{}'.format(
-            urllib.urlencode({
-                'gravatar_id': hashlib.md5(self.email).hexdigest(),
+            urllib.parse.urlencode({
+                'gravatar_id': hashlib.md5(self.email.encode('UTF-8')).hexdigest(),
                 'size': str(size)}))
     
     def __repr__(self):
