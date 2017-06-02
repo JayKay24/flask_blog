@@ -1,12 +1,6 @@
-//This code handles POSTing the form data, serialized as JSON, to the REST API.
-//It also handles taking the API response and displaying either a success or an
-//error message.
 Comments = window.Comments || {};
-/* Make an AJAX request to the API for comments associated with a given
-Entry. If no comments exist,  a message is displayed indicating no comments
-have been made yet. Otherwise, the entries are rendered as a list below the
-Entry body. */
-(function(exports, $) {:
+(function(exports, $) {
+    
 function displayNoComments() {
 noComments = $('<h3>', {
 'text': 'No comments have been posted yet.'});
@@ -52,7 +46,7 @@ displayComments(data['objects']);
 });
 }
 
-(function(exports, $) {
+    
 /* Template string for rendering success or error messages. */
 var alertMarkup = (
 '<div class="alert alert-{class} alert-dismissable">' +

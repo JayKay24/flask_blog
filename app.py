@@ -17,11 +17,9 @@ app.config.from_object(Configuration)
 # Create an object to manage the database connections.
 db = SQLAlchemy(app)
 
-api = APIManager(app, flask_sqlalchemy_db=db)
-
-# Register bcrypt with app.
-bcrypt = Bcrypt(app)
 migrate = Migrate(app, db)
+
+api = APIManager(app, flask_sqlalchemy_db=db)
 
 manager = Manager(app)
 manager.add_command('db', MigrateCommand)
@@ -39,3 +37,6 @@ def before_request():
     """
     # g object can be used to store arbitrary values-per-request.
     g.user = current_user
+    
+# Register bcrypt with app.
+bcrypt = Bcrypt(app)

@@ -17,17 +17,16 @@ def post_preprocessor(data, **kwargs):
         # data was unprocessable and return a 400 Bad Request response.
         raise ProcessingException(
             description='Invalid form submission.',
-            code=400
-        )
+            code=400)
 
 # Populate my app with additional URL routes and view code
 # that together, consitutes a RESTFUL API.
 api.create_api(
     Comment,
+    methods=['GET', 'POST'],
     # Restrict the Comment fields returned by the api.
     include_columns=['id', 'name', 'url', 'body', 'created_timestamp'],
     include_methods=['gravatar'],
-    methods=['GET', 'POST'],
     preprocessors={
-        'POST': [post_preprocessor],    
+        'POST': [post_preprocessor],
     })

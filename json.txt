@@ -1,6 +1,6 @@
-{"name": "James", 
+{"name": "Hunter", 
 "email": "jaykaynjuguna@gmail.com", 
-"url": "jameskinyua.com", 
+"url": "hunterzolomon.com", 
 "ip_address": "127.0.0.1",
-"body": "Test comment!",
+"body": "Another comment!",
 "entry_id": 1}
